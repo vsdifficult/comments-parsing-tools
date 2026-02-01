@@ -1,4 +1,3 @@
-pysondb
 selenium
 requests
 googletrans

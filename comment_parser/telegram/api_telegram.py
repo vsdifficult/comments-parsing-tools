@@ -87,7 +87,7 @@ class TelegramCommentsParser:
                         source="telegram",
                         author=author
                     )
-                    success = await self.storage.create_comment(create_comment)
+                    success = self.storage.create_comment(create_comment)
                     if success:
                         saved_count += 1
 

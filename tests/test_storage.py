@@ -6,9 +6,13 @@ from comment_parser.storage.models import CreateComment
 
 class TestCommentsStorage(unittest.TestCase):
     def setUp(self):
+        # Clear any existing file
+        db_path = os.path.join(os.path.dirname(__file__), "..", "comment_parser", "storage", "comments_db.json")
+        try:
+            os.remove(db_path)
+        except FileNotFoundError:
+            pass
         self.storage = CommentsStorage()
-        if os.path.exists('comments_db.json'):
-            os.remove('comments_db.json')
 
     def test_create_comment(self):
         create_comment = CreateComment(
@@ -33,18 +37,20 @@ class TestCommentsStorage(unittest.TestCase):
         )
         self.storage.create_comment(create_comment)
         
-        db_data = self.storage._storage.getAll()
-        if db_data:
-            comment_id = list(db_data.keys())[0]
-            comment = self.storage.get_comment(comment_id)
+        all_comments = self.storage.get_all_comments()
+        if all_comments:
+            comment = all_comments[0]
             self.assertIsNotNone(comment)
             self.assertEqual(comment.content, "Test comment")
         else:
             self.fail("No comments found in database")
 
     def tearDown(self):
-        if os.path.exists('comments_db.json'):
-            os.remove('comments_db.json')
+        db_path = os.path.join(os.path.dirname(__file__), "..", "comment_parser", "storage", "comments_db.json")
+        try:
+            os.remove(db_path)
+        except FileNotFoundError:
+            pass
 
 if __name__ == '__main__':
     unittest.main()
