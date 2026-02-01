@@ -1,0 +1,6 @@
+{
+  "telegram_api_id": 12345678,
+  "telegram_api_hash": "your_telegram_api_hash_here",
+  "vk_token": "your_vk_access_token_here",
+  "youtube_api_key": "your_youtube_data_api_key_here"
+}

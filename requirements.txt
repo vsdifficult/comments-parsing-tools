@@ -1,0 +1,7 @@
+pysondb
+selenium
+requests
+googletrans
+telethon
+pydantic
+pytest
