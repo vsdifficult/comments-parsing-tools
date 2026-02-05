@@ -10,17 +10,20 @@ class CommentsStorage:
         self._logger = getLogger("CommentsStorage")
         self.db_path = os.path.join(os.path.dirname(__file__), "comments_db.json")
         if not os.path.exists(self.db_path):
-            with open(self.db_path, 'w') as f:
+            with open(self.db_path, 'w', encoding='utf-8') as f:
                 json.dump({}, f)
 
     def create_comment(self, create_comment_obj) -> Optional[bool]:
         try:
-            with open(self.db_path, 'r') as f:
-                data = json.load(f)
+            try:
+                with open(self.db_path, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+            except json.JSONDecodeError:
+                data = {}
             comment_id = str(uuid.uuid4())
             data[comment_id] = create_comment_obj.model_dump()
-            with open(self.db_path, 'w') as f:
-                json.dump(data, f, indent=2)
+            with open(self.db_path, 'w', encoding='utf-8') as f:
+                json.dump(data, f, indent=2, ensure_ascii=False)
             self._logger.info("Comment created successfully.")
             return True 
         except Exception as e:
@@ -29,7 +32,7 @@ class CommentsStorage:
 
     def get_comment(self, comment_id):
         try: 
-            with open(self.db_path, 'r') as f:
+            with open(self.db_path, 'r', encoding='utf-8') as f:
                 data = json.load(f)
             if comment_id in data:
                 return Comment(**data[comment_id])
@@ -41,7 +44,7 @@ class CommentsStorage:
 
     def get_all_comments(self) -> List[Comment]:
         try:
-            with open(self.db_path, 'r') as f:
+            with open(self.db_path, 'r', encoding='utf-8') as f:
                 data = json.load(f)
             return [Comment(id=k, **v) for k, v in data.items()]
         except Exception as e:
